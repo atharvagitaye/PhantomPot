@@ -1,0 +1,6 @@
+honeypot:
+  ssh:
+    enabled: true
+    port: 2222
+logging:
+  log_file: "./logs/attacks.json"
