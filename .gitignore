@@ -1,2 +1,6 @@
-.venv
+.env
+.venv/
 __pycache__
+*.pyc
+logs/
+honeypot/GeoLite2-City.mmdb

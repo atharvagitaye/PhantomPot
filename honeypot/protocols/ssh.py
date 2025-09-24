@@ -41,6 +41,35 @@ class SSHHoneypot:
             chan = transport.accept(20)
             if chan is None:
                 transport.close()
+                return
+            # Simulate a fake shell for attacker interaction
+            chan.send("Welcome to Ubuntu 22.04 LTS (GNU/Linux 5.15.0-84-generic x86_64)\r\n\r\n")
+            chan.send("\r\nlogin@honeypot:~$ ")
+            while True:
+                command = ''
+                while not command.endswith('\n'):
+                    data = chan.recv(1024)
+                    if not data:
+                        break
+                    command += data.decode(errors='ignore')
+                if not command:
+                    break
+                command = command.strip()
+                # Log the command as a decoy interaction
+                self.logger.log_event(
+                    service="ssh",
+                    src_ip=addr[0],
+                    src_port=addr[1],
+                    data={"decoy_command": command}
+                )
+                # Respond with a generic message
+                if command.lower() in ['exit', 'quit', 'logout']:
+                    chan.send("logout\r\n")
+                    break
+                chan.send(f"bash: {command}: command not found\r\n")
+                chan.send("login@honeypot:~$ ")
+            chan.close()
+            transport.close()
         except Exception as e:
             print(f"[!] Error handling {addr}: {e}")
         finally:

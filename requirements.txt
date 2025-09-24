@@ -1,2 +1,3 @@
 yaml
 paramiko
+python-dotenv

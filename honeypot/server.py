@@ -1,4 +1,5 @@
 import yaml
+import os
 from honeypot.protocols.ssh import SSHHoneypot
 from honeypot.protocols.http import HTTPHoneypot
 
@@ -16,6 +17,8 @@ if __name__ == "__main__":
     import threading
 
     threads = []
+    
+    # Start honeypot services
     if ssh_conf.get("enabled", False):
         ssh_honeypot = SSHHoneypot(
             host="0.0.0.0",
@@ -25,6 +28,7 @@ if __name__ == "__main__":
         t = threading.Thread(target=ssh_honeypot.start)
         t.start()
         threads.append(t)
+        print(f"[+] SSH Honeypot started on port {ssh_conf.get('port', 2222)}")
 
     if http_conf.get("enabled", False):
         http_honeypot = HTTPHoneypot(
@@ -34,6 +38,22 @@ if __name__ == "__main__":
         t = threading.Thread(target=http_honeypot.run)
         t.start()
         threads.append(t)
+        print(f"[+] HTTP Honeypot started on port {http_conf.get('port', 8080)}")
 
-    for t in threads:
-        t.join()
+    # Start email alert scheduler if enabled
+    from dotenv import load_dotenv
+    load_dotenv()
+    if os.getenv('ENABLE_ALERTS', 'false').lower() == 'true':
+        from honeypot.email_scheduler import EmailAlertScheduler
+        interval = int(os.getenv('ALERT_INTERVAL_MINUTES', '1'))
+        email_scheduler = EmailAlertScheduler(interval_minutes=interval)
+        email_scheduler.start()
+        print(f"[+] Email alert scheduler started (interval: {interval} minutes)")
+    
+    print("[+] All services started. Press Ctrl+C to stop.")
+
+    try:
+        for t in threads:
+            t.join()
+    except KeyboardInterrupt:
+        print("\n[+] Shutting down...")
