@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Protocols](https://img.shields.io/badge/protocols-SSH%20%7C%20HTTP%20%7C%20FTP-orange)](#supported-protocols)
 
-## 🔍 Overview
+## Overview
 
 PhantomPot is a sophisticated, multi-protocol honeypot system designed for cybersecurity research, threat intelligence gathering, and network security monitoring. It simulates vulnerable services to attract and log malicious activities, providing valuable insights into attack patterns, credential harvesting attempts, and threat actor behaviors.
 
@@ -16,9 +16,9 @@ PhantomPot is a sophisticated, multi-protocol honeypot system designed for cyber
 - **Research**: Analyze attack methodologies and malware samples
 - **Education**: Learn about cybersecurity through hands-on experience
 
-## ✨ Features
+## Features
 
-### 🛡️ Core Capabilities
+### Core Capabilities
 - **Multi-Protocol Support**: SSH, HTTP (WordPress), and FTP honeypots
 - **Real-time Logging**: JSON-structured attack logs with timestamps
 - **Email Alerts**: Automated notifications for new attack attempts
@@ -26,7 +26,7 @@ PhantomPot is a sophisticated, multi-protocol honeypot system designed for cyber
 - **Credential Harvesting**: Capture login attempts and brute-force attacks
 - **Interactive Deception**: Realistic service responses to maintain attacker engagement
 
-### 🔧 Technical Features
+### Technical Features
 - **Concurrent Handling**: Multi-threaded architecture for simultaneous connections
 - **Configurable Services**: Enable/disable protocols via YAML configuration
 - **Professional Email Alerts**: HTML-formatted security notifications with threat analysis
@@ -34,7 +34,7 @@ PhantomPot is a sophisticated, multi-protocol honeypot system designed for cyber
 - **Docker Ready**: Containerized deployment support
 - **SIEM Integration**: Compatible with Splunk, ELK, and other analytics platforms
 
-## 🌐 Supported Protocols
+## Supported Protocols
 
 ### SSH Honeypot (Port 2222)
 - **Paramiko-based** SSH server simulation
@@ -57,7 +57,7 @@ PhantomPot is a sophisticated, multi-protocol honeypot system designed for cyber
 - **Passive/Active mode** responses
 - **Brute-force detection** capabilities
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 PhantomPot/
@@ -79,7 +79,7 @@ PhantomPot/
 └── requirements.txt        # Python dependencies
 ```
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 - **Python 3.7+**
@@ -126,7 +126,7 @@ docker run -d \
   phantompot
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Main Configuration (`honeypot/config.yaml`)
 
@@ -162,7 +162,7 @@ ALERT_INTERVAL_MINUTES=10
 ALERT_SERVICES=ssh,http,ftp
 ```
 
-## 📊 Usage
+## Usage
 
 ### Starting the Honeypot
 
@@ -200,7 +200,7 @@ jq -r '.service' logs/attacks.json | sort | uniq -c
 jq -r 'select(.data.username) | "\(.data.username):\(.data.password)"' logs/attacks.json
 ```
 
-## 📈 Monitoring & Analytics
+## Monitoring & Analytics
 
 ### Splunk Integration
 
@@ -274,7 +274,7 @@ if __name__ == "__main__":
     analyze_attacks()
 ```
 
-## 🔒 Security Considerations
+## Security Considerations
 
 ### Deployment Best Practices
 
@@ -306,7 +306,7 @@ iptables -A INPUT -p tcp --dport 8081 -m limit --limit 20/min -j ACCEPT
 iptables -A INPUT -p tcp --dport 2121 -m limit --limit 10/min -j ACCEPT
 ```
 
-## 🔧 Development
+## Development
 
 ### Adding New Protocols
 
@@ -332,7 +332,7 @@ class NewProtocolHoneypot:
         pass
 ```
 
-## 📋 Roadmap
+## Roadmap
 
 ### Upcoming Features
 - **Telnet Honeypot** - Legacy protocol simulation
@@ -349,7 +349,7 @@ class NewProtocolHoneypot:
 3. **API Integration** - RESTful API for external systems
 4. **Mobile Alerts** - Push notifications via mobile apps
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
