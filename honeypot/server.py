@@ -2,6 +2,7 @@ import yaml
 import os
 from honeypot.protocols.ssh import SSHHoneypot
 from honeypot.protocols.http import HTTPHoneypot
+from honeypot.protocols.ftp import FTPHoneypot
 
 def load_config(path="honeypot/config.yaml"):
     with open(path, "r") as f:
@@ -12,6 +13,7 @@ if __name__ == "__main__":
 
     ssh_conf = config["honeypot"].get("ssh", {})
     http_conf = config["honeypot"].get("http", {})
+    ftp_conf = config["honeypot"].get("ftp", {})
     log_file = config["logging"]["log_file"]
 
     import threading
@@ -39,6 +41,17 @@ if __name__ == "__main__":
         t.start()
         threads.append(t)
         print(f"[+] HTTP Honeypot started on port {http_conf.get('port', 8080)}")
+
+    if ftp_conf.get("enabled", False):
+        ftp_honeypot = FTPHoneypot(
+            host="0.0.0.0",
+            port=ftp_conf.get("port", 21),
+            log_file=log_file
+        )
+        t = threading.Thread(target=ftp_honeypot.start)
+        t.start()
+        threads.append(t)
+        print(f"[+] FTP Honeypot started on port {ftp_conf.get('port', 21)}")
 
     # Start email alert scheduler if enabled
     from dotenv import load_dotenv

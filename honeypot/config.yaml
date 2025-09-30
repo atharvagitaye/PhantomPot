@@ -5,5 +5,8 @@ honeypot:
   http:
     enabled: true
     port: 8081
+  ftp:
+    enabled: true
+    port: 2121
 logging:
   log_file: "./logs/attacks.json"
