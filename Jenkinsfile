@@ -2,32 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Setup Python') {
             steps {
-                // Jenkins usually handles the SCM checkout automatically, 
-                // but if you have a manual checkout stage:
-                checkout scm
+                bat 'python -m venv venv'
+                bat 'venv\\Scripts\\pip install -r requirements.txt'
             }
         }
 
-        stage('Setup Python') {
-        steps {
-            bat 'python -m venv venv'
-            // Force the installation of pytest even if it's missing from requirements.txt
-            bat 'venv\\Scripts\\pip install -r requirements.txt'
-            bat 'venv\\Scripts\\pip install pytest'
-        }
-        }}
-
         stage('Lint') {
-        steps {
-                // Adding '|| exit 0' ensures the pipeline continues even if there are lint errors
+            steps {
+                // Ignore errors so the pipeline continues to tests
                 bat 'venv\\Scripts\\flake8 . --exclude=venv || exit 0'
             }
         }
 
         stage('Test') {
             steps {
+                // Ensure pytest is installed and then run it
+                bat 'venv\\Scripts\\pip install pytest'
                 bat 'venv\\Scripts\\pytest'
             }
         }
@@ -35,11 +27,13 @@ pipeline {
 
     post {
         always {
-            // Changed from sh to echo or bat to prevent the post-action crash
             echo 'Build process completed.'
         }
+        success {
+            echo '✅ Build Passed!'
+        }
         failure {
-            echo '❌ Build failed!'
+            echo '❌ Build Failed!'
         }
     }
-}
+} // Line 45: Ensure this is the ONLY closing brace at the very end
