@@ -11,13 +11,13 @@ pipeline {
         }
 
         stage('Setup Python') {
-            steps {
-                // Using 'bat' instead of 'sh' for Windows
-                bat 'python --version'
-                bat 'python -m venv venv'
-                bat 'venv\\Scripts\\pip install -r requirements.txt'
-            }
+        steps {
+            bat 'python -m venv venv'
+            // Force the installation of pytest even if it's missing from requirements.txt
+            bat 'venv\\Scripts\\pip install -r requirements.txt'
+            bat 'venv\\Scripts\\pip install pytest'
         }
+        }}
 
         stage('Lint') {
         steps {
