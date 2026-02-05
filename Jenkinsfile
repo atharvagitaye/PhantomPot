@@ -1,57 +1,45 @@
 pipeline {
     agent any
 
-    environment {
-        VENV = 'venv'
-    }
-
     stages {
         stage('Checkout') {
             steps {
+                // Jenkins usually handles the SCM checkout automatically, 
+                // but if you have a manual checkout stage:
                 checkout scm
             }
         }
 
         stage('Setup Python') {
             steps {
-                sh '''
-                python3 --version
-                python3 -m venv $VENV
-                . $VENV/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                '''
+                // Using 'bat' instead of 'sh' for Windows
+                bat 'python --version'
+                bat 'python -m venv venv'
+                bat 'venv\\Scripts\\pip install -r requirements.txt'
             }
         }
 
         stage('Lint') {
             steps {
-                sh '''
-                . $VENV/bin/activate
-                flake8 app || true
-                '''
+                // Ensure you point to the executable inside the virtual environment
+                bat 'venv\\Scripts\\flake8 .'
             }
         }
 
         stage('Test') {
             steps {
-                sh '''
-                . $VENV/bin/activate
-                pytest -v
-                '''
+                bat 'venv\\Scripts\\pytest'
             }
         }
     }
 
     post {
-        success {
-            echo '✅ Build and tests passed!'
+        always {
+            // Changed from sh to echo or bat to prevent the post-action crash
+            echo 'Build process completed.'
         }
         failure {
             echo '❌ Build failed!'
-        }
-        always {
-            sh 'rm -rf venv'
         }
     }
 }
