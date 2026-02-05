@@ -12,11 +12,10 @@ pipeline {
 
         stage('Setup Python') {
             steps {
+                // Using 'bat' instead of 'sh' for Windows
                 bat 'python --version'
                 bat 'python -m venv venv'
-                // Install requirements AND the linting/testing tools
                 bat 'venv\\Scripts\\pip install -r requirements.txt'
-                bat 'venv\\Scripts\\pip install flake8 pytest' 
             }
         }
 
