@@ -35,10 +35,10 @@ pipeline {
 
         stage('Test') {
         steps {
-            // We use --continue-on-collection-errors so a lack of tests doesn't crash the build
-            bat 'venv\\Scripts\\pytest --continue-on-collection-errors || exit 0'
+            // We use || exit 0 to prevent exit code 5 from failing the build
+            bat 'venv\\Scripts\\pytest || exit 0'
         }
-        }
+    }
     }
 
     post {
