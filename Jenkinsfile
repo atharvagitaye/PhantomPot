@@ -21,8 +21,8 @@ pipeline {
 
         stage('Lint') {
             steps {
-                // Ensure you point to the executable inside the virtual environment
-                bat 'venv\\Scripts\\flake8 .'
+                // The --exclude flag tells flake8 to ignore the venv folder
+                bat 'venv\\Scripts\\flake8 . --exclude=venv'
             }
         }
 
